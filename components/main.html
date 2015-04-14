@@ -1,0 +1,14 @@
+<script type="text/javascript">
+  function getCredentials(){
+    credentials.get({
+      query: {
+        foo: 'bar'
+      },
+      url: 'https://bedrock.dev:18443/'
+    });
+  }
+</script>
+
+<button onclick="getCredentials()">
+Get Credentials
+</button>
