@@ -1,6 +1,6 @@
 {
   "name": "credentials-polyfill",
-  "version": "0.2.0-dev",
+  "version": "0.2.0",
   "description": "A polyfill for the Identity Credentials API",
   "authors": [
     "The Open Payments Foundation"
