@@ -28,9 +28,9 @@ The *navigator.credentials.registerDid(* **options** *)* call can be
 used to register a new decentralized identifier and tie it to the entity's 
 identity provider. The call takes the following arguments:
 * **options** (**required** *object*)
- * *idp* (*string*) - A decentralized identifier for the identity provider 
+ * **idp** (*string*) - A decentralized identifier for the identity provider 
 that should be associated with the newly created decentralized identifier.
- * *registrationCallback* (**required** *URL*) - An HTTP endpoint that can 
+ * **registrationCallback** (**required** *URL*) - An HTTP endpoint that can 
 receive a callback with the decentralized identifier document that was created.
 
 Example:
@@ -38,7 +38,7 @@ Example:
 ```javascript
 navigator.credentials.registerDid({
   idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
-  registrationCallback: 'https://myidp.example.com/registrationComplete'
+  registrationCallback: 'https://idp.example.com/registrationComplete'
 });
 ```
 
@@ -77,13 +77,15 @@ the following being POST'ed back to the *registrationCallback*:
 ## Storing a Credential
 
 The *navigator.credentials.store(* **identity**, **options** *)* call can be 
-used to store a set of attributes backed by credentials at an entity's identity 
-provider. The call takes the following arguments:
-* **identity** (**required** *object*) - A JSON-LD document that is of type 
-*Identity*, containing at least one valid *credential* entry.
+used to store a set of attributes about an entity, backed by credentials,
+at an entity's identity provider. The call takes the following arguments:
+* **identity** (**required** *object*) - A JSON-LD document that
+contains at least one valid *credential* entry.
 * **options** (**required** *object*)
- * *storageCallback* (**required** *URL*) - An HTTP endpoint that can 
-receive a callback with the document that was stored at the identity provider.
+ * **storageCallback** (**required** *URL*) - The HTTP endpoint where the
+result of the operation will be POST'ed. If successful, the same
+document provided in *identity* will be be POST'ed back to the
+*storageCallback* URL.
 
 ```javascript
 navigator.credentials.store({
@@ -110,8 +112,8 @@ navigator.credentials.store({
 });
 ```
 
-The example above will result in an a JSON-LD document that should
-look exactly like the document requested for storage POST'ed back 
+The example above will result in the same JSON-LD document that 
+was passed via the *identity* parameter being POST'ed back 
 to the *storageCallback*. Optionally, the recipient of the 
 credentials may choose to not store some of the credentials and
 can notify the issuer that those credentials were not stored by
@@ -124,10 +126,14 @@ used to request a set of properties about an entity that are backed by
 credentials from an entity's identity provider. The call takes the 
 following arguments:
 * **query** (**required** *object*) - A JSON-LD document that is a
-"query by example". The query consists of the attributes a 
+"query by example". The query consists of the attributes associated with
+an entity that the credential consumer would like to see.
 * **options** (**required** *object*)
- * *storageCallback* (**required** *URL*) - An HTTP endpoint that can 
-receive a callback with the document that was stored at the identity provider.
+ * **requestCallback** (**required** *URL*) - The HTTP endpoint where the
+result of the operation will be POST'ed. If successful, an identity
+document with all of the attributes requested, as well as credentials
+that validate each attribute, will be POST'ed back to the
+*credentialCallback* URL.
 
 ```javascript
 navigator.credentials.request({
@@ -138,6 +144,9 @@ navigator.credentials.request({
   credentialCallback: 'https://consumer.example.com/credentialCallback'
 });
 ```
+
+The example above will eventually result in the following JSON-LD document 
+being POST'ed back to the *credentialCallback* URL:
 
 ```jsonld
 {
