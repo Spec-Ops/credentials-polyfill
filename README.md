@@ -9,7 +9,13 @@ A browser polyfill that provides the Identity Credentials API, which supports:
 # Documentation
 
 The Credentials API enables a Web developer to create new DIDs for an entity, 
-store credentials, and then request credentials.
+store credentials, and request credentials. The basic API is outlined
+below:
+
+* *navigator.credentials.registerDid(* **options** *)*
+* *navigator.credentials.store(* **identity**, **options** *)*
+* *navigator.credentials.request(* **query**, **options** *)*
+* *navigator.credentials.transmit(* **identity**, **options** *)*
 
 ## Registering a decentralized identifier
 
@@ -41,7 +47,7 @@ the following being POST'ed back to the *registrationCallback*:
   "idp": "did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1",
   "accessControl": {
     "writePermission": [{
-      "id": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f\/keys\/1",
+      "id": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
       "type": "CryptographicKey"
     }, {
       "id": "did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1",
@@ -57,7 +63,7 @@ the following being POST'ed back to the *registrationCallback*:
   "signature": {
     "type": "GraphSignature2012",
     "created": "2015-07-02T16:54:27Z",
-    "creator": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f\/keys\/1",
+    "creator": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
     "signatureValue": "JukNUu...I0g=="
   }
 }
@@ -66,8 +72,8 @@ the following being POST'ed back to the *registrationCallback*:
 ## Storing a Credential
 
 The *navigator.credentials.store(* **identity**, **options** *)* call can be 
-used to request that a credential is stored at an entity's identity provider. 
-The call takes the following arguments:
+used to store a set of attributes backed by credentials at an entity's identity 
+provider. The call takes the following arguments:
 * **identity** (**required** *object*) - A JSON-LD document that is of type 
 *Identity*, containing at least one valid *credential* entry.
 * **options** (**required** *object*)
@@ -108,10 +114,21 @@ omitting them from the response.
 
 ## Requesting a Credential
 
+The *navigator.credentials.request(* **query**, **options** *)* call can be 
+used to request a set of properties about an entity that are backed by
+credentials from an entity's identity provider. The call takes the 
+following arguments:
+* **query** (**required** *object*) - A JSON-LD document that is a
+"query by example". The query consists of the attributes a 
+* **options** (**required** *object*)
+ * *storageCallback* (**required** *URL*) - An HTTP endpoint that can 
+receive a callback with the document that was stored at the identity provider.
+
 ```javascript
 navigator.credentials.request({
   '@context': 'https://w3id.org/identity/v1',
-  'id': ''
+  'id': '',
+  'email': ''
 }, {
   credentialCallback: 'https://consumer.example.com/credentialCallback'
 });
@@ -128,6 +145,7 @@ navigator.credentials.request({
       "type": ["Credential", "CryptographicKeyCredential"],
       "claim": {
         "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
+        "email": "test@example.com",
         "publicKey": {
           "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962/keys/1",
           "publicKeyPem": "-----BEGIN PUBLIC KEY-----\r\nMIIBIj...IDAQAB\r\n-----END PUBLIC KEY-----\r\n"
