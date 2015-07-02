@@ -10,11 +10,16 @@ A browser polyfill that provides the Identity Credentials API, which supports:
 
 The Credentials API enables a Web developer to create new DIDs for an entity, 
 store credentials, and request credentials. The basic API is outlined
-below:
+below, separated by different actors in the system:
 
-* *navigator.credentials.registerDid(* **options** *)*
+Credential issuer API:
 * *navigator.credentials.store(* **identity**, **options** *)*
+ 
+Credential consumer API:
 * *navigator.credentials.request(* **query**, **options** *)*
+
+Identity provider APIs:
+* *navigator.credentials.registerDid(* **options** *)*
 * *navigator.credentials.transmit(* **identity**, **options** *)*
 
 ## Registering a decentralized identifier
