@@ -94,11 +94,12 @@ navigator.credentials.store({
   "credential": [{
     "@graph": {
       "@context": "https://w3id.org/identity/v1",
+      "id": "https://issuer.example.com/creds/1",
       "type": ["Credential", "EmailCredential"],
       "claim": {
         "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
         "email": "test@example.com"
-      }
+      },
       "signature": {
         "type": "GraphSignature2012",
         "created": "2015-07-02T17:41:39Z",
@@ -156,6 +157,7 @@ being POST'ed back to the *credentialCallback* URL:
   "credential": [{
     "@graph": {
       "@context": "https://w3id.org/identity/v1",
+      "id": "urn:credential-1",
       "type": ["Credential", "CryptographicKeyCredential"],
       "claim": {
         "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
@@ -196,6 +198,7 @@ navigator.credentials.transmit({
   "credential": [{
     "@graph": {
       "@context": "https://w3id.org/identity/v1",
+      "id": "urn:credential-1",
       "type": ["Credential", "CryptographicKeyCredential"],
       "claim": {
         "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
