@@ -1,14 +1,13 @@
 {
   "name": "credentials-polyfill",
   "version": "0.6.0-dev",
+  "moduleType": ["amd"],
   "description": "A polyfill for the Identity Credentials API",
   "authors": [
     "The Open Payments Foundation"
   ],
   "license": "BSD",
-  "main": [
-    "lib/credentials-polyfill.js"
-  ],
+  "main": ["lib/credentials-polyfill.js"],
   "dependencies": {
     "es6-promise": "^2.0.0"
   },

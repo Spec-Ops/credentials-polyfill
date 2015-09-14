@@ -1,0 +1,16 @@
+{
+  "name": "credentials-polyfill-test",
+  "version": "0.0.1-dev",
+  "description": "Test for a polyfill for the Identity Credentials API",
+  "authors": [
+    "The Open Payments Foundation"
+  ],
+  "license": "BSD",
+  "dependencies": {
+    "es6-promise": "^2.0.0",
+    "bedrock-angular": "^1.2.1"
+  },
+  "resolutions": {
+    "angular": "1.3.18"
+  }
+}

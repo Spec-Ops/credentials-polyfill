@@ -1,27 +1,7 @@
-<script type="text/javascript">
-  function getCredentials() {
-    credentials.get({
-      query: {
-        foo: 'bar'
-      },
-      url: 'https://bedrock.dev:18443/'
-    });
-  }
-  function registerDID() {
-    credentials.registerDID({
-      idp: {
-        did: 'test-did',
-        url: 'https://bedrock.dev:18444/' 
-      },
-      url: 'https://bedrock.dev:18443/'
-    });
-  }
-</script>
+<div ng-controller="MainController as ctrl">
 
-<button onclick="getCredentials()">
-Get Credentials
-</button>
+  <button class="btn btn-default" ng-click="ctrl.registerDid()">Register DID</button>
 
-<button onclick="registerDID()">
-Register DID
-</button>
+  <button class="btn btn-default" ng-click="ctrl.get()">Get Credentials</button>
+
+</div>
