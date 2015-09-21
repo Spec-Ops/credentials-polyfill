@@ -17,16 +17,6 @@ if(config.server.port !== 443) {
 }
 config.server.baseUri = 'https://' + config.server.host;
 
-// FIXME: required until bedrock-views supports this by default
-// replace landing page '/' with one that uses ng-view
-config.views.routes = [
-  ['/', 'main.html'],
-  '/about',
-  '/legal',
-  '/contact',
-  ['/help', 'help/index.html']
-];
-
 // add pseudo bower packages
 var rootPath = path.join(__dirname, '..');
 config.requirejs.bower.packages.push({

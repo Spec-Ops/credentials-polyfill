@@ -8,7 +8,7 @@
   "license": "BSD",
   "dependencies": {
     "es6-promise": "^2.0.0",
-    "bedrock-angular": "^1.2.1"
+    "bedrock-angular": "^1.3.0"
   },
   "resolutions": {
     "angular": "1.3.18"

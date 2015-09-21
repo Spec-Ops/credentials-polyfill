@@ -9,7 +9,7 @@
     "bedrock": "^1.0.4",
     "bedrock-express": "^1.4.0",
     "bedrock-server": "^1.0.2",
-    "bedrock-views": "^1.1.2",
+    "bedrock-views": "^1.2.0",
     "bedrock-requirejs": "^1.0.0",
     "bower": "~1.5.2"
   },
