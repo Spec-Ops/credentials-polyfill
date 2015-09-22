@@ -33,6 +33,15 @@ function factory() {
       url: 'https://bedrock.dev:18443/'
     });*/
   };
+
+  // FIXME: remove me
+  self.test = function() {
+    console.log('test');
+    navigator.credentials._test(window.location.origin + '/agent')
+      .then(function(result) {
+        console.log('API call result', result);
+      });
+  };
 }
 
 return {MainController: factory};
