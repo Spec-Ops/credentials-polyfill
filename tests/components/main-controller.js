@@ -35,12 +35,14 @@ function factory() {
   };
 
   // FIXME: remove me
-  self.test = function() {
-    console.log('test');
-    navigator.credentials._test(window.location.origin + '/agent')
-      .then(function(result) {
-        console.log('API call result', result);
-      });
+  self.request = function() {
+    console.log('request');
+    navigator.credentials.request({query: 'foo'}, {
+      agentUrl: window.location.origin +
+        '/agent?type=request&route=params&cmd=receive'
+    }).then(function(result) {
+      console.log('API call result', result);
+    });
   };
 }
 

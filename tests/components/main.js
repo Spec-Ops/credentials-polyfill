@@ -7,8 +7,8 @@
  * @author Dave Longley
  */
 define(
-  ['angular', './main-controller', './agent-controller'],
-  function(angular, mainController, agentController) {
+  ['angular', './main-controller', './agent-controller', './idp-controller'],
+  function(angular, mainController, agentController, idpController) {
 
 'use strict';
 
@@ -16,6 +16,7 @@ var module = angular.module('credentials-polyfill.test', ['ngRoute']);
 
 module.controller(mainController);
 module.controller(agentController);
+module.controller(idpController);
 
 /* @ngInject */
 module.config(function($routeProvider) {
@@ -26,6 +27,10 @@ module.config(function($routeProvider) {
   $routeProvider
     .when('/agent', {
       templateUrl: requirejs.toUrl('credentials-polyfill-test/agent.html')
+    });
+  $routeProvider
+    .when('/idp', {
+      templateUrl: requirejs.toUrl('credentials-polyfill-test/idp.html')
     });
 });
 
