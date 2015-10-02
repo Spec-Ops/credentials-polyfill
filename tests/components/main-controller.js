@@ -26,21 +26,18 @@ function factory() {
 
   self.get = function() {
     console.log('get');
-    /*navigator.credentials.get({
-      query: {
-        foo: 'bar'
-      },
-      url: 'https://bedrock.dev:18443/'
-    });*/
-  };
-
-  // FIXME: remove me
-  self.request = function() {
-    console.log('request');
     navigator.credentials.get({
       query: {foo: ''},
-      agentUrl: window.location.origin +
-        '/agent?type=get&route=params&cmd=receive'
+      agentUrl: window.location.origin + '/agent?type=get&route=params'
+    }).then(function(result) {
+      console.log('API call result', result);
+    });
+  };
+
+  self.store = function() {
+    console.log('store');
+    navigator.credentials.store({foo: 'bar'}, {
+      agentUrl: window.location.origin + '/agent?type=store&route=params'
     }).then(function(result) {
       console.log('API call result', result);
     });

@@ -10,30 +10,33 @@ define(['credentials-polyfill'], function() {
 'use strict';
 
 /* @ngInject */
-function factory($scope) {
+function factory($scope, $location) {
   var self = this;
 
-  console.log('IdP receiving `get` params...');
-
+  var query = $location.search();
   var operation;
+
+  console.log('IdP receiving `' + query.op + '` params...');
+
   navigator.credentials.getPendingOperation({
-    agentUrl: '/agent?type=get&route=params&cmd=send'
+    agentUrl: '/agent?type=' + query.op + '&route=params'
   }).then(function(op) {
     operation = op;
-    if(op.name !== 'get') {
+    if(op.name !== query.op) {
       throw new Error('Unexpected credential operation.');
     }
-    self.params = op.options;
+    self.op = op.name;
+    if(op.name === 'get') {
+      self.params = op.options;
+    } else {
+      self.params = op.credential;
+    }
     $scope.$apply();
   });
 
-  self.resolve = function() {
+  self.complete = function() {
     operation.complete({foo: 'bar'}, {
-      agentUrl: '/agent?type=get&route=result&cmd=receive'
-      // TODO: transmit needs to do both
-      // '/agent?type=request&route=result&cmd=receive'
-      // and
-      // '/agent?type=request&route=result&cmd=end'
+      agentUrl: '/agent?type=' + operation.name + '&route=result'
     });
   };
 }
