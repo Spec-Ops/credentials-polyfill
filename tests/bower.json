@@ -11,6 +11,6 @@
     "bedrock-angular": "^1.3.0"
   },
   "resolutions": {
-    "angular": "1.3.18"
+    "angular": "1.3.20"
   }
 }
