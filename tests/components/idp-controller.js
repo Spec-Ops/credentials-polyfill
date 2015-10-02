@@ -13,17 +13,23 @@ define(['credentials-polyfill'], function() {
 function factory($scope) {
   var self = this;
 
-  console.log('IdP receiving `request` params...');
-  navigator.credentials.getPendingRequest('request', {
-    agentUrl: '/agent?type=request&route=params&cmd=send'
-  }).then(function(params) {
-    self.params = params;
+  console.log('IdP receiving `get` params...');
+
+  var operation;
+  navigator.credentials.getPendingOperation({
+    agentUrl: '/agent?type=get&route=params&cmd=send'
+  }).then(function(op) {
+    operation = op;
+    if(op.name !== 'get') {
+      throw new Error('Unexpected credential operation.');
+    }
+    self.params = op.options;
     $scope.$apply();
   });
 
   self.resolve = function() {
-    navigator.credentials.resolve('request', {foo: 'bar'}, {
-      agentUrl: '/agent?type=request&route=result&cmd=receive'
+    operation.complete({foo: 'bar'}, {
+      agentUrl: '/agent?type=get&route=result&cmd=receive'
       // TODO: transmit needs to do both
       // '/agent?type=request&route=result&cmd=receive'
       // and

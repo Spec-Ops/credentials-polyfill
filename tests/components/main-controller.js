@@ -37,9 +37,10 @@ function factory() {
   // FIXME: remove me
   self.request = function() {
     console.log('request');
-    navigator.credentials.request({query: 'foo'}, {
+    navigator.credentials.get({
+      query: {foo: ''},
       agentUrl: window.location.origin +
-        '/agent?type=request&route=params&cmd=receive'
+        '/agent?type=get&route=params&cmd=receive'
     }).then(function(result) {
       console.log('API call result', result);
     });
