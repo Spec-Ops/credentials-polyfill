@@ -19,9 +19,6 @@ function factory($location) {
     case 'send':
       send(query.type, query.route);
       break;
-    /*case 'end':
-      end(query.type);
-      break;*/
     default:
       throw new Error('Protocol error.');
   }
@@ -30,8 +27,8 @@ function factory($location) {
 function receive(type, route) {
   console.log('credential agent receiving ' + route + ' from relying party...');
 
-  // TODO: if route is `result` and a result is already in sessionStorage,
-  // we could assume we're supposed to send it (call end())
+  // if route is `result` and a result is already in sessionStorage, we can
+  // assume we're supposed to send it by calling end()
   if(route === 'result' && sessionStorage.getItem(
     'credentials.' + type + '.result')) {
     return end(type);
