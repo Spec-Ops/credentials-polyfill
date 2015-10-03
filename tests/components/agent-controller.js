@@ -12,24 +12,35 @@ define(['credentials-polyfill'], function() {
 /* @ngInject */
 function factory($location) {
   var query = $location.search();
-  proxy(query.type, query.route);
+  proxy(query.type, query.route, query.origin);
 }
 
-function proxy(type, route) {
+function proxy(type, route, origin) {
   var item = sessionStorage.getItem('credentials.' + type + '.' + route);
 
   var Router = navigator.credentials._Router;
-  var router = new Router(route);
+  var router;
 
   if(item) {
+    item = JSON.parse(item);
+
     // send the item
     if(route === 'params') {
       console.log('credential agent sending to IdP...');
+      router = new Router(route, origin);
     } else {
       console.log('credential agent sending to RP...');
+      if(item.origin !== origin) {
+        throw new Error('Origin mismatch.');
+      }
+      // get RP origin
+      var rpMessage = sessionStorage.getItem('credentials.' + type + '.params');
+      router = new Router(route, JSON.parse(rpMessage).origin);
     }
-    router.send(type, JSON.parse(item).data);
+    router.send(type, item.data);
   } else {
+    router = new Router(route, origin);
+
     // receive the item
     if(route === 'params') {
       console.log('credential agent receiving from RP...');
@@ -37,6 +48,7 @@ function proxy(type, route) {
       console.log('credential agent receiving from IdP...');
     }
     router.request(type).then(function(message) {
+      console.log('credential agent received', message);
       sessionStorage.setItem(
         'credentials.' + type + '.' + route,
         JSON.stringify({

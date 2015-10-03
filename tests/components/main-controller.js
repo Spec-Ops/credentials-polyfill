@@ -28,7 +28,7 @@ function factory() {
     console.log('get');
     navigator.credentials.get({
       query: {foo: ''},
-      agentUrl: window.location.origin + '/agent?type=get&route=params'
+      agentUrl: '/agent?type=get&route=params'
     }).then(function(result) {
       console.log('API call result', result);
     });
@@ -37,7 +37,7 @@ function factory() {
   self.store = function() {
     console.log('store');
     navigator.credentials.store({foo: 'bar'}, {
-      agentUrl: window.location.origin + '/agent?type=store&route=params'
+      agentUrl: '/agent?type=store&route=params'
     }).then(function(result) {
       console.log('API call result', result);
     });
