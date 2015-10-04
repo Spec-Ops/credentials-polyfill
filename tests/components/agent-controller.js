@@ -9,18 +9,45 @@ define(['credentials-polyfill'], function() {
 
 'use strict';
 
+var Router = navigator.credentials._Router;
+
 /* @ngInject */
-function factory($location) {
+function factory($location, $scope) {
+  var self = this;
+
   var query = $location.search();
-  proxy(query.type, query.route, query.origin);
+  if(query.op === 'registerDid') {
+    if(query.route !== 'params') {
+      throw new Error('Bad request.');
+    }
+    proxy(query.op, query.route, query.origin).then(function() {
+      self.register = true;
+      $scope.$apply();
+    });
+  } else {
+    proxy(query.op, query.route, query.origin);
+  }
+
+  self.registerDid = function() {
+    console.log('registering DID...');
+
+    var router = new Router('result', query.origin);
+    router.send('registerDid', {
+      '@context': 'https://w3id.org/identity/v1',
+      id: 'did:example-1234',
+      publicKey: {
+        id: 'did:example-1234/keys/1',
+        owner: 'did:example-1234',
+        publicKeyPem: '-----BEGIN PUBLIC KEY-----...'
+      }
+    });
+  };
 }
 
-function proxy(type, route, origin) {
-  var item = sessionStorage.getItem('credentials.' + type + '.' + route);
-
-  var Router = navigator.credentials._Router;
+function proxy(op, route, origin) {
   var router;
 
+  var item = sessionStorage.getItem('credentials.' + op + '.' + route);
   if(item) {
     item = JSON.parse(item);
 
@@ -34,10 +61,10 @@ function proxy(type, route, origin) {
         throw new Error('Origin mismatch.');
       }
       // get RP origin
-      var rpMessage = sessionStorage.getItem('credentials.' + type + '.params');
+      var rpMessage = sessionStorage.getItem('credentials.' + op + '.params');
       router = new Router(route, JSON.parse(rpMessage).origin);
     }
-    router.send(type, item.data);
+    router.send(op, item.data);
   } else {
     router = new Router(route, origin);
 
@@ -47,10 +74,10 @@ function proxy(type, route, origin) {
     } else {
       console.log('credential agent receiving from IdP...');
     }
-    router.request(type).then(function(message) {
+    return router.request(op).then(function(message) {
       console.log('credential agent received', message);
       sessionStorage.setItem(
-        'credentials.' + type + '.' + route,
+        'credentials.' + op + '.' + route,
         JSON.stringify({
           id: new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
           origin: message.origin,
@@ -58,8 +85,10 @@ function proxy(type, route, origin) {
         }));
 
       if(route === 'params') {
-        // navigate to IdP
-        window.location.replace(window.location.origin + '/idp?op=' + type);
+        if(op !== 'registerDid') {
+          // navigate to IdP
+          window.location.replace(window.location.origin + '/idp?op=' + op);
+        }
       } else {
         // request navigation
         router.navigate();

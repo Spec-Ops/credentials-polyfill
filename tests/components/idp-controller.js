@@ -19,7 +19,7 @@ function factory($scope, $location) {
   console.log('IdP receiving `' + query.op + '` params...');
 
   navigator.credentials.getPendingOperation({
-    agentUrl: '/agent?type=' + query.op + '&route=params'
+    agentUrl: '/agent?op=' + query.op + '&route=params'
   }).then(function(op) {
     operation = op;
     if(op.name !== query.op) {
@@ -36,7 +36,7 @@ function factory($scope, $location) {
 
   self.complete = function() {
     operation.complete({foo: 'bar'}, {
-      agentUrl: '/agent?type=' + operation.name + '&route=result'
+      agentUrl: '/agent?op=' + operation.name + '&route=result'
     });
   };
 }

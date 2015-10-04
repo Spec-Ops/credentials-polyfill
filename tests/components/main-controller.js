@@ -14,32 +14,31 @@ function factory() {
   var self = this;
 
   self.registerDid = function() {
-    console.log('register DID');
-    /*navigator.credentials.registerDID({
-      idp: {
-        did: 'test-did',
-        url: 'https://bedrock.dev:18444/'
-      },
-      url: 'https://bedrock.dev:18443/'
-    });*/
+    console.log('credentials.registerDid');
+    navigator.credentials.registerDid({
+      idp: 'did:test-1234',
+      agentUrl: '/agent?op=registerDid&route=params'
+    }).then(function(result) {
+      console.log('credentials.registerDid result', result);
+    });
   };
 
   self.get = function() {
-    console.log('get');
+    console.log('credentials.get');
     navigator.credentials.get({
       query: {foo: ''},
-      agentUrl: '/agent?type=get&route=params'
+      agentUrl: '/agent?op=get&route=params'
     }).then(function(result) {
-      console.log('API call result', result);
+      console.log('credentials.get result', result);
     });
   };
 
   self.store = function() {
-    console.log('store');
+    console.log('credentials.store');
     navigator.credentials.store({foo: 'bar'}, {
-      agentUrl: '/agent?type=store&route=params'
+      agentUrl: '/agent?op=store&route=params'
     }).then(function(result) {
-      console.log('API call result', result);
+      console.log('credentials.store result', result);
     });
   };
 }

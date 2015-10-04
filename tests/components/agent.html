@@ -1,1 +1,4 @@
-<div ng-controller="AgentController as ctrl"></div>
+<div ng-controller="AgentController as ctrl">
+  <button ng-if="ctrl.register" class="btn btn-default"
+    ng-click="ctrl.registerDid()">Register</button>
+</div>
