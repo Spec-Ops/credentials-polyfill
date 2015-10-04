@@ -81,7 +81,7 @@ function proxy(op, route, origin) {
         JSON.stringify({
           id: new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
           origin: message.origin,
-          data: message.data.data
+          data: message.data
         }));
 
       if(route === 'params') {
