@@ -201,11 +201,11 @@ provided by the entity.
 The call takes no arguments. It returns a *Promise* that resolves to a
 *CredentialOperation*. A *CredentialOperation* has the following properties:
 
-* **name** - The name of the pending operation (ie: 'get' or 'store').
-* **options** - Present if the operation name is 'get'.
- * **query** - The query passed to `navigator.credentials.get`.
- * **publicKey** - The entity's public key for the device they are using.
-* **credential** - Present if operation name is `store`. Contains the
+* **name** (*string*) - The name of the pending operation (ie: `get` or `store`).
+* **options** (*object*) - Present if the operation name is `get`.
+ * **query** (*object*) - The query passed to `navigator.credentials.get`.
+ * **publicKey** (*object*) - The entity's public key for the device they are using.
+* **credential** (*object*) - Present if operation name is `store`. Contains the
   credentials document passed to `navigator.credentials.store`.
 
 The identity provider can now help the entity to fulfill the credentials
