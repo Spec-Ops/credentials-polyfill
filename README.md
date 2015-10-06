@@ -1,49 +1,56 @@
-# Identity Credentials API
+# Identity Credentials Browser API
 
-A browser polyfill that provides the Identity Credentials API, which supports:
+A browser polyfill that provides the Identity Credentials Browser API, which
+supports:
 
  * Registration of decentralized identifiers (DIDs)
  * Storing credentials
- * Requesting credentials
+ * Getting credentials
 
 # Documentation
 
-The Credentials API enables a Web developer to create new DIDs for an entity, 
-store credentials, and request credentials. The basic API is outlined
-below, separated by different actors in the system:
+This API enables a developer to Web applications that can create new DIDs for
+an entity, get credentials, and store credentials through the browser. The
+API is outlined below, separated by different actors in the system:
 
 Credential issuer API:
-* *navigator.credentials.store(* **identity**, **options** *)*
- 
+* *navigator.credentials.store(* **credential** *)*
+
 Credential consumer API:
-* *navigator.credentials.request(* **query**, **options** *)*
+* *navigator.credentials.get(* **options** *)*
 
 Identity provider APIs:
 * *navigator.credentials.registerDid(* **options** *)*
-* *navigator.credentials.transmit(* **identity**, **options** *)*
+* *navigator.credentials.getPendingOperation(* **options** *)*
+* *CredentialOperation.complete(* **result** *)*
 
 ## Registering a decentralized identifier
 
-The *navigator.credentials.registerDid(* **options** *)* call can be 
-used to register a new decentralized identifier and tie it to the entity's 
-identity provider. The call takes the following arguments:
+The *navigator.credentials.registerDid(* **options** *)* call can be
+used to register a new decentralized identifier and link it to the entity's
+identity provider.
+
+The call takes the following arguments:
+
 * **options** (**required** *object*)
- * **idp** (*string*) - A decentralized identifier for the identity provider 
-that should be associated with the newly created decentralized identifier.
- * **registrationCallback** (**required** *URL*) - An HTTP endpoint that can 
-receive a callback with the decentralized identifier document that was created.
+ * **idp** (*string*) - A decentralized identifier for the identity provider
+   that should be associated with the newly created decentralized identifier.
+
+The call returns a *Promise* that resolves to the document associated with
+the registered DID.
 
 Example:
 
 ```javascript
 navigator.credentials.registerDid({
-  idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
-  registrationCallback: 'https://idp.example.com/registrationComplete'
+  idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1'
+}).then(function(didDocument) {
+  // ...
 });
 ```
 
-The example above will result in an a JSON-LD document that looks like 
-the following being POST'ed back to the *registrationCallback*:
+The example above will result in an a JSON-LD document that looks like
+the following:
 
 ```jsonld
 {
@@ -76,16 +83,17 @@ the following being POST'ed back to the *registrationCallback*:
 
 ## Storing a Credential
 
-The *navigator.credentials.store(* **identity**, **options** *)* call can be 
+The *navigator.credentials.store(* **credential** *)* call can be
 used to store a set of attributes about an entity, backed by credentials,
-at an entity's identity provider. The call takes the following arguments:
-* **identity** (**required** *object*) - A JSON-LD document that
-contains at least one valid *credential* entry.
-* **options** (**required** *object*)
- * **storageCallback** (**required** *URL*) - The HTTP endpoint where the
-result of the operation will be POST'ed. If successful, the same
-document provided in *identity* will be be POST'ed back to the
-*storageCallback* URL.
+at an entity's identity provider.
+
+The call takes the following arguments:
+
+* **credential** (**required** *object*) - A JSON-LD document that
+  contains at least one valid *credential* entry.
+
+The call returns a *Promise* that resolves to a JSON-LD document that contains
+the credentials that were stored.
 
 ```javascript
 navigator.credentials.store({
@@ -108,46 +116,46 @@ navigator.credentials.store({
       }
     }
   }]
-}, {
-  storageCallback: 'https://issuer.example.com/storageCallback'
+}).then(function(identity) {
+  // ...
 });
 ```
 
-The example above will result in the same JSON-LD document that 
-was passed via the *identity* parameter being POST'ed back 
-to the *storageCallback*. Optionally, the recipient of the 
-credentials may choose to not store some of the credentials and
-can notify the issuer that those credentials were not stored by
+The example above will result in a JSON-LD document that looks like
+the one that was passed via the *credential* parameter. Optionally, the
+recipient of the credentials may choose to not store some of the credentials
+and can notify the issuer that those credentials were not stored by
 omitting them from the response.
 
-## Requesting a Credential
+## Getting a Credential
 
-The *navigator.credentials.request(* **query**, **options** *)* call can be 
-used to request a set of properties about an entity that are backed by
-credentials from an entity's identity provider. The call takes the 
-following arguments:
-* **query** (**required** *object*) - A JSON-LD document that is a
-"query by example". The query consists of the attributes associated with
-an entity that the credential consumer would like to see.
+The *navigator.credentials.get(* **options** *)* call can be used to
+request a set of properties about an entity that are backed by
+credentials from an entity's identity provider.
+
+The call takes the following arguments:
+
 * **options** (**required** *object*)
- * **requestCallback** (**required** *URL*) - The HTTP endpoint where the
-result of the operation will be POST'ed. If successful, an identity
-document with all of the attributes requested, as well as credentials
-that validate each attribute, will be POST'ed back to the
-*credentialCallback* URL.
+ * **query** (**required** *object*) - A JSON-LD document that is a
+   "query by example". The query consists of the attributes associated with
+   an entity that the credential consumer would like to see.
+
+The call returns a *Promise* that resolves to a JSON-LD document that contains
+the credentials that were retrieved.
 
 ```javascript
 navigator.credentials.request({
-  '@context': 'https://w3id.org/identity/v1',
-  'id': '',
-  'email': ''
-}, {
-  credentialCallback: 'https://consumer.example.com/credentialCallback'
+  query: {
+    '@context': 'https://w3id.org/identity/v1',
+    id: '',
+    email: ''
+  }
+}).then(function(identity) {
+  // ...
 });
 ```
 
-The example above will eventually result in the following JSON-LD document 
-being POST'ed back to the *credentialCallback* URL:
+The example above will eventually result in the following JSON-LD document:
 
 ```jsonld
 {
@@ -184,14 +192,31 @@ being POST'ed back to the *credentialCallback* URL:
 }
 ```
 
-## Transmitting a Requested Credential
+## Getting a Pending Credential Operation
 
-The transmit method is only used by identity providers to complete 
-the transmission of a set of credentials once authorization has
-been provided by the entity.
+The `getPendingOperation` method is only used by identity providers to complete
+a pending `get` or `store` credentials operation once authorization has been
+provided by the entity.
+
+The call takes no arguments. It returns a *Promise* that resolves to a
+*CredentialOperation*. A *CredentialOperation* has the following properties:
+
+* **name** - The name of the pending operation (ie: 'get' or 'store').
+* **options** - Present if the operation name is 'get'.
+ * **query** - The query passed to `navigator.credentials.get`.
+ * **publicKey** - The entity's public key for the device they are using.
+* **credential** - Present if operation name is `store`. Contains the
+  credentials document passed to `navigator.credentials.store`.
+
+The identity provider can now help the entity to fulfill the credentials
+query or ask it to accept the storage request. Once the identity provider
+has completed the operation, it must call `complete` on the
+*CredentialOperation* instance, passing the result of the operation. This
+call will cause the browser to navigate away from the identity provider
+with the result.
 
 ```javascript
-navigator.credentials.transmit({
+navigator.credentials.getPendingOperation({
   "@context": "https://w3id.org/identity/v1",
   "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
   "type": "Identity",
@@ -215,8 +240,11 @@ navigator.credentials.transmit({
       }
     }
   }]
-}, {
-  responseUrl: 'https://consumer.example.com/credentialCallback'
+}).then(function(operation) {
+  // ...
+  
+  // operation now complete
+  operation.complete(result);
 });
 ```
 
