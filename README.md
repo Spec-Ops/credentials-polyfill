@@ -144,7 +144,7 @@ The call returns a *Promise* that resolves to a JSON-LD document that contains
 the credentials that were retrieved.
 
 ```javascript
-navigator.credentials.request({
+navigator.credentials.get({
   query: {
     '@context': 'https://w3id.org/identity/v1',
     id: '',
