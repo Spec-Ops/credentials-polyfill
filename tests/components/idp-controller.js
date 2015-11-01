@@ -19,12 +19,9 @@ function factory($scope, $location) {
   console.log('IdP receiving `' + query.op + '` params...');
 
   navigator.credentials.getPendingOperation({
-    agentUrl: '/agent?op=' + query.op + '&route=params'
+    agentUrl: '/agent'
   }).then(function(op) {
     operation = op;
-    if(op.name !== query.op) {
-      throw new Error('Unexpected credential operation.');
-    }
     self.op = op.name;
     if(op.name === 'get') {
       self.params = op.options;
@@ -35,8 +32,8 @@ function factory($scope, $location) {
   });
 
   self.complete = function() {
-    operation.complete({foo: 'bar'}, {
-      agentUrl: '/agent?op=' + operation.name + '&route=result'
+    operation.complete({id: 'did:test-1234', foo: 'bar'}, {
+      agentUrl: '/agent'
     });
   };
 }

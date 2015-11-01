@@ -15,9 +15,9 @@ function factory() {
 
   self.registerDid = function() {
     console.log('credentials.registerDid');
-    navigator.credentials.registerDid({
+    IdentityCredential.register({
       idp: 'did:test-1234',
-      agentUrl: '/agent?op=registerDid&route=params'
+      agentUrl: '/agent'
     }).then(function(result) {
       console.log('credentials.registerDid result', result);
     });
@@ -27,7 +27,7 @@ function factory() {
     console.log('credentials.get');
     navigator.credentials.get({
       query: {foo: ''},
-      agentUrl: '/agent?op=get&route=params'
+      agentUrl: '/agent'
     }).then(function(result) {
       console.log('credentials.get result', result);
     });
@@ -35,9 +35,9 @@ function factory() {
 
   self.store = function() {
     console.log('credentials.store');
-    navigator.credentials.store({foo: 'bar'}, {
-      agentUrl: '/agent?op=store&route=params'
-    }).then(function(result) {
+    navigator.credentials.store(
+      new IdentityCredential({id: 'did:test-1234', foo: 'bar'}),
+      {agentUrl: '/agent'}).then(function(result) {
       console.log('credentials.store result', result);
     });
   };

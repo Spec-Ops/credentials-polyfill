@@ -47,7 +47,7 @@ function factory($location, $scope) {
 function proxy(op, route, origin) {
   var router;
 
-  var item = sessionStorage.getItem('credentials.' + op + '.' + route);
+  var item = sessionStorage.getItem('credentials.' + route);
   if(item) {
     item = JSON.parse(item);
 
@@ -61,10 +61,10 @@ function proxy(op, route, origin) {
         throw new Error('Origin mismatch.');
       }
       // get RP origin
-      var rpMessage = sessionStorage.getItem('credentials.' + op + '.params');
+      var rpMessage = sessionStorage.getItem('credentials.params');
       router = new Router(route, JSON.parse(rpMessage).origin);
     }
-    router.send(op, item.data);
+    router.send(item.op, item.data);
   } else {
     router = new Router(route, origin);
 
@@ -77,9 +77,10 @@ function proxy(op, route, origin) {
     return router.request(op).then(function(message) {
       console.log('credential agent received', message);
       sessionStorage.setItem(
-        'credentials.' + op + '.' + route,
+        'credentials.' + route,
         JSON.stringify({
           id: new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
+          op: op,
           origin: message.origin,
           data: message.data
         }));
