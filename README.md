@@ -20,21 +20,21 @@ Credential consumer API:
 * *navigator.credentials.get(* **options** *)*
 
 Identity provider APIs:
-* *navigator.credentials.registerDid(* **options** *)*
+* *IdentityCredential.register(* **options** *)*
 * *navigator.credentials.getPendingOperation(* **options** *)*
 * *CredentialOperation.complete(* **result** *)*
 
-## Registering a decentralized identifier
+## Registering a decentralized identity
 
-The *navigator.credentials.registerDid(* **options** *)* call can be
-used to register a new decentralized identifier and link it to the entity's
+The *IdentityCredential.register(* **options** *)* call can be
+used to register a new decentralized identity and link it to the entity's
 identity provider.
 
 The call takes the following arguments:
 
 * **options** (**required** *object*)
  * **idp** (*string*) - A decentralized identifier for the identity provider
-   that should be associated with the newly created decentralized identifier.
+   that should be associated with the newly created decentralized identity.
 
 The call returns a *Promise* that resolves to the document associated with
 the registered DID.
@@ -42,7 +42,7 @@ the registered DID.
 Example:
 
 ```javascript
-navigator.credentials.registerDid({
+IdentityCredential.register({
   idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1'
 }).then(function(didDocument) {
   // ...
@@ -73,7 +73,7 @@ the following:
     "publicKeyPem": "-----BEGIN PUBLIC KEY-----\r\nMIIBI...AQAB\r\n-----END PUBLIC KEY-----\r\n"
   }],
   "signature": {
-    "type": "GraphSignature2012",
+    "type": "LinkedDataSignature2015",
     "created": "2015-07-02T16:54:27Z",
     "creator": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
     "signatureValue": "JukNUu...I0g=="
@@ -89,14 +89,15 @@ at an entity's identity provider.
 
 The call takes the following arguments:
 
-* **credential** (**required** *object*) - A JSON-LD document that
-  contains at least one valid *credential* entry.
+* **credential** (**required** *IdentityCredential*) - An IdentityCredential
+  containing a JSON-LD document that contains at least one valid
+  *credential* entry.
 
-The call returns a *Promise* that resolves to a JSON-LD document that contains
-the credentials that were stored.
+The call returns a *Promise* that resolves to an IdentityCredential containing
+a JSON-LD document that contains the credentials that were stored.
 
 ```javascript
-navigator.credentials.store({
+navigator.credentials.store(new IdentityCredential({
   "@context": "https://w3id.org/identity/v1",
   "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
   "credential": [{
@@ -109,23 +110,23 @@ navigator.credentials.store({
         "email": "test@example.com"
       },
       "signature": {
-        "type": "GraphSignature2012",
+        "type": "LinkedDataSignature2015",
         "created": "2015-07-02T17:41:39Z",
         "creator": "https://issuer.example.com/keys/1",
         "signatureValue": "Tyd5S0A...nx33Yg=="
       }
     }
   }]
-}).then(function(identity) {
+})).then(function(credential) {
   // ...
 });
 ```
 
-The example above will result in a JSON-LD document that looks like
-the one that was passed via the *credential* parameter. Optionally, the
-recipient of the credentials may choose to not store some of the credentials
-and can notify the issuer that those credentials were not stored by
-omitting them from the response.
+The example above will result in an IdentityCredential containing a JSON-LD
+document that looks like the one that was passed via the *credential*
+parameter. Optionally, the recipient of the credentials may choose to not
+store some of the credentials and can notify the issuer that those credentials
+were not stored by omitting them from the response.
 
 ## Getting a Credential
 
@@ -136,21 +137,30 @@ credentials from an entity's identity provider.
 The call takes the following arguments:
 
 * **options** (**required** *object*)
- * **query** (**required** *object*) - A JSON-LD document that is a
-   "query by example". The query consists of the attributes associated with
-   an entity that the credential consumer would like to see.
+ * **identity** (**required** *object*)
+   * **query** (**required** *object*) - A JSON-LD document that is a
+     "query by example". The query consists of the attributes associated with
+     an entity that the credential consumer would like to see.
 
-The call returns a *Promise* that resolves to a JSON-LD document that contains
-the credentials that were retrieved.
+The call returns a *Promise* that resolves to an IdentityCredential containing
+a JSON-LD document that contains the credentials that were retrieved.
 
 ```javascript
 navigator.credentials.get({
-  query: {
-    '@context': 'https://w3id.org/identity/v1',
-    id: '',
-    email: ''
+  identity: {
+    query: {
+      '@context': 'https://w3id.org/identity/v1',
+      id: '',
+      email: ''
+    }
   }
-}).then(function(identity) {
+}).then(function(credential) {
+  if(credential === null) {
+    // no credential found/selected
+    // ...
+  }
+  // get JSON-LD identity document from credential
+  var identity = credential.identity;
   // ...
 });
 ```
@@ -176,7 +186,7 @@ The example above will eventually result in the following JSON-LD document:
         }
       },
       "signature": {
-        "type": "GraphSignature2012",
+        "type": "LinkedDataSignature2015",
         "created": "2015-07-02T17:45:21Z",
         "creator": "https://authorization.dev:33443/idp/keys/1",
         "signatureValue": "S33Qcs...zWDqQQ=="
@@ -184,7 +194,7 @@ The example above will eventually result in the following JSON-LD document:
     }
   }],
   "signature": {
-    "type": "GraphSignature2012",
+    "type": "LinkedDataSignature2015",
     "created": "2015-07-02T17:46:04Z",
     "creator": "did:04054703-8c94-46a3-bae7-7ffd07c0c962/keys/1",
     "signatureValue": "LpoVj...LP2A=="
@@ -233,7 +243,7 @@ navigator.credentials.getPendingOperation({
         }
       },
       "signature": {
-        "type": "GraphSignature2012",
+        "type": "LinkedDataSignature2015",
         "created": "2015-07-02T17:45:21Z",
         "creator": "https://authorization.dev:33443/idp/keys/1",
         "signatureValue": "S33Qcs...zWDqQQ=="
@@ -242,7 +252,7 @@ navigator.credentials.getPendingOperation({
   }]
 }).then(function(operation) {
   // ...
-  
+
   // operation now complete
   operation.complete(result);
 });
