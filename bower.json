@@ -1,6 +1,6 @@
 {
   "name": "credentials-polyfill",
-  "version": "0.6.1-dev",
+  "version": "0.7.0",
   "moduleType": ["amd"],
   "description": "A polyfill for the Identity Credentials API",
   "authors": [
