@@ -7,6 +7,8 @@ supports:
  * Storing credentials
  * Getting credentials
 
+This polyfill works in conjunction with [authorization.io](https://github.com/digitalbazaar/authorization.io).
+
 # Documentation
 
 This API enables a developer to Web applications that can create new DIDs for
