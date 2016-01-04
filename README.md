@@ -231,31 +231,7 @@ call will cause the browser to navigate away from the identity provider
 with the result.
 
 ```javascript
-navigator.credentials.getPendingOperation({
-  "@context": "https://w3id.org/identity/v1",
-  "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
-  "type": "Identity",
-  "credential": [{
-    "@graph": {
-      "@context": "https://w3id.org/identity/v1",
-      "id": "urn:credential-1",
-      "type": ["Credential", "CryptographicKeyCredential"],
-      "claim": {
-        "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962",
-        "publicKey": {
-          "id": "did:04054703-8c94-46a3-bae7-7ffd07c0c962/keys/1",
-          "publicKeyPem": "-----BEGIN PUBLIC KEY-----\r\nMIIBIj...IDAQAB\r\n-----END PUBLIC KEY-----\r\n"
-        }
-      },
-      "signature": {
-        "type": "LinkedDataSignature2015",
-        "created": "2015-07-02T17:45:21Z",
-        "creator": "https://authorization.dev:33443/idp/keys/1",
-        "signatureValue": "S33Qcs...zWDqQQ=="
-      }
-    }
-  }]
-}).then(function(operation) {
+navigator.credentials.getPendingOperation().then(function(operation) {
   // ...
 
   // operation now complete
