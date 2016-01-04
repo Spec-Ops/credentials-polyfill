@@ -222,6 +222,11 @@ The call takes no arguments. It returns a *Promise* that resolves to a
   `navigator.credentials.store`.
  * **identity** (*object*) - The entity's signed identity for the device they
    are using, including a CryptographicKeyCredential.
+ * **registerKey** (*boolean*) - True if an attempt should be made to register
+   the entity's public key (provided in the CryptographicKeyCredential) with
+   its decentralized identity. This will only be possible if the entity has
+   granted permission to their identity provider to write new keys to their
+   decentralized identity.
 
 The identity provider can now help the entity to fulfill the credentials
 query or ask it to accept the storage request. Once the identity provider
