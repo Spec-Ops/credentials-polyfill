@@ -9,19 +9,21 @@ supports:
 
 This polyfill works in conjunction with [authorization.io](https://github.com/digitalbazaar/authorization.io).
 
+The API it provides is meant to eventually extend the [Credential Management API][].
+
 # Documentation
 
 This API enables a developer to Web applications that can create new DIDs for
 an entity, get credentials, and store credentials through the browser. The
 API is outlined below, separated by different actors in the system:
 
-Credential issuer API:
+APIs called by credential issuers:
 * *navigator.credentials.store(* **credential** *)*
 
-Credential consumer API:
+APIs called by credential consumers:
 * *navigator.credentials.get(* **options** *)*
 
-Identity provider APIs:
+APIs called by credential curators (previously known as identity providers):
 * *IdentityCredential.register(* **options** *)*
 * *navigator.credentials.getPendingOperation(* **options** *)*
 * *CredentialOperation.complete(* **result** *)*
@@ -30,13 +32,15 @@ Identity provider APIs:
 
 The *IdentityCredential.register(* **options** *)* call can be
 used to register a new decentralized identity and link it to the entity's
-identity provider.
+credential curator.
 
 The call takes the following arguments:
 
 * **options** (**required** *object*)
- * **idp** (*string*) - A decentralized identifier for the identity provider
-   that should be associated with the newly created decentralized identity.
+ * **idp** (*string*) - A decentralized identifier for the credential curator
+   (previously known as identity provider) that should be associated with the
+   newly created decentralized identity. Note that this name is likely to
+   change to **curator** in the future.
 
 The call returns a *Promise* that resolves to the document associated with
 the registered DID.
@@ -87,7 +91,7 @@ the following:
 
 The *navigator.credentials.store(* **credential** *)* call can be
 used to store a set of attributes about an entity, backed by credentials,
-at an entity's identity provider.
+at an entity's credential curator.
 
 The call takes the following arguments:
 
@@ -134,7 +138,7 @@ were not stored by omitting them from the response.
 
 The *navigator.credentials.get(* **options** *)* call can be used to
 request a set of properties about an entity that are backed by
-credentials from an entity's identity provider.
+credentials from an entity's credential curator.
 
 The call takes the following arguments:
 
@@ -206,9 +210,9 @@ The example above will eventually result in the following JSON-LD document:
 
 ## Getting a Pending Credential Operation
 
-The `getPendingOperation` method is only used by identity providers to complete
-a pending `get` or `store` credentials operation once authorization has been
-provided by the entity.
+The `getPendingOperation` method is only used by credential curators to
+complete a pending `get` or `store` credentials operation once authorization
+has been provided by the entity.
 
 The call takes no arguments. It returns a *Promise* that resolves to a
 *CredentialOperation*. A *CredentialOperation* has the following properties:
@@ -228,11 +232,11 @@ The call takes no arguments. It returns a *Promise* that resolves to a
    granted permission to their identity provider to write new keys to their
    decentralized identity.
 
-The identity provider can now help the entity to fulfill the credentials
-query or ask it to accept the storage request. Once the identity provider
+The credential curator can now help the entity to fulfill the credentials
+query or ask it to accept the storage request. Once the credential curator
 has completed the operation, it must call `complete` on the
 *CredentialOperation* instance, passing the result of the operation. This
-call will cause the browser to navigate away from the identity provider
+call will cause the browser to navigate away from the credential curator
 with the result.
 
 ```javascript
@@ -250,3 +254,6 @@ Source
 The source code for the JavaScript implementation is available at:
 
 https://github.com/digitalbazaar/credentials-polyfill
+
+
+[Credential Management API]: https://w3c.github.io/webappsec-credential-management/
