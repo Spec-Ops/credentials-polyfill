@@ -7,7 +7,8 @@ supports:
  * Storing credentials
  * Getting credentials
 
-This polyfill works in conjunction with [authorization.io](https://github.com/digitalbazaar/authorization.io).
+This polyfill works in conjunction with [authorization.io](https://github.com/digitalbazaar/authorization.io). A
+demo on authorization.io is [here](https://authorization.io).
 
 The API it provides is meant to eventually extend the [Credential Management API][].
 
