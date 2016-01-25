@@ -14,9 +14,9 @@ The API it provides is meant to eventually extend the [Credential Management API
 
 # Documentation
 
-This API enables a developer to Web applications that can create new DIDs for
-an entity, get credentials, and store credentials through the browser. The
-API is outlined below, separated by different actors in the system:
+This API enables a developer to write Web applications that can create new
+DIDs for an entity, get credentials, and store credentials through the browser.
+The API is outlined below, separated by different actors in the system:
 
 APIs called by credential issuers:
 * *navigator.credentials.store(* **credential** *)*
