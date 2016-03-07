@@ -240,6 +240,8 @@ has completed the operation, it must call `complete` on the
 call will cause the browser to navigate away from the credential curator
 with the result.
 
+**Note: `getPendingOperation` may be changed to use [MessageChannels](https://html.spec.whatwg.org/multipage/comms.html#message-channels). **
+
 ```javascript
 navigator.credentials.getPendingOperation().then(function(operation) {
   // ...
