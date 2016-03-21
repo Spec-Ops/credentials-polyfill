@@ -23,11 +23,7 @@ function factory($scope, $location) {
   }).then(function(op) {
     operation = op;
     self.op = op.name;
-    if(op.name === 'get') {
-      self.params = op.options;
-    } else {
-      self.params = op.credential;
-    }
+    self.params = op.options;
     $scope.$apply();
   });
 

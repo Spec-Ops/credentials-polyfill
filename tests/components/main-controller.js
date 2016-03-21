@@ -26,8 +26,10 @@ function factory() {
   self.get = function() {
     console.log('credentials.get');
     navigator.credentials.get({
-      query: {foo: ''},
-      agentUrl: '/agent'
+      identity: {
+        query: {foo: ''},
+        agentUrl: '/agent'
+      }
     }).then(function(result) {
       console.log('credentials.get result', result);
     });

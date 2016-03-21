@@ -64,7 +64,14 @@ function proxy(op, route, origin) {
       var rpMessage = sessionStorage.getItem('credentials.params');
       router = new Router(route, JSON.parse(rpMessage).origin);
     }
-    router.send(item.op, item.data);
+    var params = {};
+    if(item.op === 'get') {
+      params.options = item.data;
+    } else {
+      params.options = {};
+      params.options.store = item.data;
+    }
+    router.send(item.op, params);
   } else {
     router = new Router(route, origin);
 
@@ -75,11 +82,9 @@ function proxy(op, route, origin) {
       console.log('credential agent receiving from IdP...');
     }
     return router.request(op).then(function(message) {
-      console.log('credential agent received', message);
       sessionStorage.setItem(
         'credentials.' + route,
         JSON.stringify({
-          id: new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
           op: op,
           origin: message.origin,
           data: message.data
