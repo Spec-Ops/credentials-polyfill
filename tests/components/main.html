@@ -1,9 +1,19 @@
 <div ng-controller="MainController as ctrl">
-  
-  <button class="btn btn-default" ng-click="ctrl.registerDid()">Register</button>
-  
-  <button class="btn btn-default" ng-click="ctrl.get()">Get</button>
 
+  <p>
+    Test version >= 0.8.x
+  </p>
+  <button class="btn btn-default" ng-click="ctrl.registerDid()">Register</button>
+  <button class="btn btn-default" ng-click="ctrl.get()">Get</button>
   <button class="btn btn-default" ng-click="ctrl.store()">Store</button>
+
+  <hr/>
+
+  <p>
+    Test version < 0.8.x
+  </p>
+  <button class="btn btn-default" ng-click="ctrl.registerDid('0.7.x')">Register</button>
+  <button class="btn btn-default" ng-click="ctrl.get('0.7.x')">Get</button>
+  <button class="btn btn-default" ng-click="ctrl.store('0.7.x')">Store</button>
 
 </div>

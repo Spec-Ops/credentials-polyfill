@@ -1,14 +1,19 @@
 /*!
  * Example component module.
  *
- * Copyright (c) 2015 The Open Payments Foundation. All rights reserved.
+ * Copyright (c) 2015-2016 Digital Bazaar, Inc. All rights reserved.
  *
  * @author Omar Malik
  * @author Dave Longley
  */
-define(
-  ['angular', './main-controller', './agent-controller', './idp-controller'],
-  function(angular, mainController, agentController, idpController) {
+define([
+  'angular',
+  './main-controller',
+  './agent-controller',
+  './repo-controller',
+  './repo-legacy-controller'
+], function(
+  angular, mainController, agentController, repoController, repoLegacyController) {
 
 'use strict';
 
@@ -16,7 +21,8 @@ var module = angular.module('credentials-polyfill.test', ['ngRoute']);
 
 module.controller(mainController);
 module.controller(agentController);
-module.controller(idpController);
+module.controller(repoController);
+module.controller(repoLegacyController);
 
 /* @ngInject */
 module.config(function($routeProvider) {
@@ -29,8 +35,12 @@ module.config(function($routeProvider) {
       templateUrl: requirejs.toUrl('credentials-polyfill-test/agent.html')
     });
   $routeProvider
-    .when('/idp', {
-      templateUrl: requirejs.toUrl('credentials-polyfill-test/idp.html')
+    .when('/repo', {
+      templateUrl: requirejs.toUrl('credentials-polyfill-test/repo.html')
+    });
+  $routeProvider
+    .when('/repo-legacy', {
+      templateUrl: requirejs.toUrl('credentials-polyfill-test/repo-legacy.html')
     });
 });
 

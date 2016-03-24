@@ -1,7 +1,7 @@
 /*!
- * IdP Controller.
+ * Repo Controller.
  *
- * Copyright (c) 2015 The Open Payments Foundation. All rights reserved.
+ * Copyright (c) 2015-2016 Digital Bazaar, Inc. All rights reserved.
  *
  * @author Dave Longley
  */
@@ -13,13 +13,12 @@ define(['credentials-polyfill'], function() {
 function factory($scope, $location) {
   var self = this;
 
-  var query = $location.search();
   var operation;
 
-  console.log('IdP receiving `' + query.op + '` params...');
+  console.log('Repo receiving params...');
 
   navigator.credentials.getPendingOperation({
-    agentUrl: '/agent'
+    agentUrl: '/agent?repo=repo'
   }).then(function(op) {
     operation = op;
     self.op = op.name;
@@ -29,11 +28,11 @@ function factory($scope, $location) {
 
   self.complete = function() {
     operation.complete({id: 'did:test-1234', foo: 'bar'}, {
-      agentUrl: '/agent'
+      agentUrl: '/agent?repo=repo'
     });
   };
 }
 
-return {IdpController: factory};
+return {RepoController: factory};
 
 });
