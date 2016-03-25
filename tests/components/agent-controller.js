@@ -60,7 +60,7 @@ function factory($location, $scope) {
 
     // request params from RP
     var rpRouter = new Router(origin);
-    return rpRouter.request('params').then(function(message) {
+    return rpRouter.request(query.op, 'params').then(function(message) {
       if(op === 'registerDid') {
         self.register = true;
         $scope.$apply();
@@ -175,109 +175,6 @@ function factory($location, $scope) {
       }
     });
   }
-
-/*
-  function proxy(op, route, origin) {
-    var router;
-    if(window.frameElement) {
-      console.log('called proxy inside iframe...', op, route);
-    }
-
-    // <= 0.8.x uses sessionStorage to cache message, so we have to
-    // support that here until those versions are no longer supported
-    var item = sessionStorage.getItem('credentials.' + route);
-    if(item) {
-      item = JSON.parse(item);
-
-      // send the item
-      if(route === 'params') {
-        // **deprecated since 0.8.x** - only called in legacy mode
-        console.log('credential agent sending to Repo...');
-        router = new Router(route, origin, {handle: window.parent});
-      } else {
-        console.log('credential agent sending to RP...');
-        if(item.origin !== origin) {
-          throw new Error('Origin mismatch.');
-        }
-        // get RP origin
-        var rpMessage = sessionStorage.getItem('credentials.params');
-        router = new Router(route, JSON.parse(rpMessage).origin);
-      }
-      var params = {};
-      if(item.op === 'get') {
-        params.options = item.data;
-      } else {
-        params.options = {};
-        params.options.store = item.data;
-      }
-      router.send(item.op, params);
-    } else {
-      // **deprecated since 0.8.x**
-      if(window.frameElement) {
-        router = new Router(route, origin, {handle: window.parent});
-      } else {
-        router = new Router(route, origin);
-      }
-
-      // receive the item
-      if(route === 'params') {
-        console.log('credential agent receiving from RP...');
-      } else {
-        console.log('credential agent receiving from Repo...');
-      }
-      return router.request(op).then(function(message) {
-        sessionStorage.setItem(
-          'credentials.' + route,
-          JSON.stringify({
-            op: op,
-            origin: message.origin,
-            data: message.data
-          }));
-
-        if(route === 'params') {
-          if(op !== 'registerDid') {
-            // display repo
-            self.repo = window.location.origin + '/' + query.repo + '?op=' + op;
-            self.showRepo = true;
-            $scope.$apply();
-            var iframe = angular.element('iframe[name="repo"]')[0];
-            var handle = iframe.contentWindow;
-            router = new Router(
-              'result', window.location.origin, {handle: handle});
-            console.log('agent serving params...');
-            var params = {};
-            if(op === 'get') {
-              params.options = message.data;
-            } else {
-              params.options = {};
-              params.options.store = message.data;
-            }
-            router.serve(op + '.params', params).then(function() {
-              console.log('agent receiving result...');
-              return router.receive(op + '.result');
-            }).then(function(message) {
-              console.log('result received, proxying it to RP...');
-              // TODO: storing items only required for backwards compatibility
-              sessionStorage.setItem(
-                'credentials.result',
-                JSON.stringify({
-                  op: op,
-                  origin: message.origin,
-                  data: message.data
-                }));
-              proxy(op, 'result', message.origin);
-            });
-          }
-        } else {
-          // TODO: proxy result to top-level auth.io
-          // legacy-mode; close iframe
-          console.log('close iframe');
-          self.showRepo = false;
-          $scope.$apply();
-        }
-      });
-    }
-  }*/
 }
 
 return {AgentController: factory};
