@@ -87,7 +87,6 @@ function factory($location, $scope) {
 
       /* use once 0.7.x is no longer supported
       // serve params to repo
-      console.log('agent serving params...');
       var repoRouter = new Router(window.location.origin, {handle: repoHandle});
       repoRouter.serve(op + '.params', params).then(function() {
         // receive result from repo
@@ -107,30 +106,21 @@ function factory($location, $scope) {
       });
 
       function serveParams() {
-        console.log('agent serving params...');
         // will either receive request from the repo (>= 0.8.x) or from
         // the iframe proxy (< 0.8.x)
         return new Promise(function(resolve, reject) {
           // TODO: add timeout
           window.addEventListener('message', listener);
           function listener(e) {
-            console.log('receive listener', e);
-            console.log('got type', e.data.type);
-            console.log('e.source.origin', e.origin);
             if(typeof e.data === 'object' && 'data' in e.data &&
               e.data.type === 'request') {
               if(e.source === repoHandle &&
                 e.origin === window.location.origin) {
-                console.log('received data', e.data);
                 return resolve(e);
-              } else {
-                console.log('e.source is not repoHandle');
               }
               // assume request is from iframe proxy
               if(e.origin === window.location.origin) {
                 return resolve(e);
-              } else {
-                console.log('e.origin does not match', e.origin);
               }
             }
             reject(new Error('Credential protocol error.'));
@@ -143,30 +133,21 @@ function factory($location, $scope) {
       }
 
       function receiveResult() {
-        console.log('agent receiving result...');
         // will either receive result from the repo (>= 0.8.x) or from
         // the iframe proxy (< 0.8.x)
         return new Promise(function(resolve, reject) {
           // TODO: add timeout
           window.addEventListener('message', listener);
           function listener(e) {
-            console.log('receive listener', e);
-            console.log('got type', e.data.type);
-            console.log('e.source.origin', e.origin);
             if(typeof e.data === 'object' && 'data' in e.data &&
               e.data.type === op + '.result') {
               if(e.source === repoHandle &&
                 e.origin === window.location.origin) {
-                console.log('received data', e.data);
                 return resolve(e.data);
-              } else {
-                console.log('e.source is not repoHandle');
               }
               // assume result is from iframe proxy
               if(e.origin === window.location.origin) {
                 return resolve(e.data);
-              } else {
-                console.log('e.origin does not match', e.origin);
               }
             }
             reject(new Error('Credential protocol error.'));
