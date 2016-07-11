@@ -24,7 +24,7 @@ APIs called by credential issuers:
 APIs called by credential consumers:
 * *navigator.credentials.get(* **options** *)*
 
-APIs called by credential curators (previously known as identity providers):
+APIs called by credential repository (previously known as identity providers):
 * *IdentityCredential.register(* **options** *)*
 * *navigator.credentials.getPendingOperation(* **options** *)*
 * *CredentialOperation.complete(* **result** *)*
@@ -32,16 +32,20 @@ APIs called by credential curators (previously known as identity providers):
 ## Registering a decentralized identity
 
 The *IdentityCredential.register(* **options** *)* call can be
-used to register a new decentralized identity and link it to the entity's
-credential curator.
+used to register a new decentralized identifier and link it to the entity's
+credential repository.
 
 The call takes the following arguments:
 
 * **options** (**required** *object*)
- * **idp** (*string*) - A decentralized identifier for the credential curator
+ * **idp** (*string*) - A URL identifier for the credential repository
    (previously known as identity provider) that should be associated with the
-   newly created decentralized identity. Note that this name is likely to
-   change to **curator** in the future.
+   newly created decentralized identifier. Note that this name is likely to
+   change to **repo** in the future.
+ * **name** (*string*) - a friendly, human-meaningful identifier, such as
+   an email address, to suggest be used, in conjunction with a password the
+   user will enter, to assist in future decentralized identifier recovery
+   should it be necessary.
 
 The call returns a *Promise* that resolves to the document associated with
 the registered DID.
@@ -50,7 +54,8 @@ Example:
 
 ```javascript
 IdentityCredential.register({
-  idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1'
+  idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
+  name: 'person@example.org'
 }).then(function(didDocument) {
   // ...
 });
@@ -92,7 +97,7 @@ the following:
 
 The *navigator.credentials.store(* **credential** *)* call can be
 used to store a set of attributes about an entity, backed by credentials,
-at an entity's credential curator.
+at an entity's credential repository.
 
 The call takes the following arguments:
 
@@ -139,7 +144,7 @@ were not stored by omitting them from the response.
 
 The *navigator.credentials.get(* **options** *)* call can be used to
 request a set of properties about an entity that are backed by
-credentials from an entity's credential curator.
+credentials from an entity's credential repository.
 
 The call takes the following arguments:
 
@@ -211,7 +216,7 @@ The example above will eventually result in the following JSON-LD document:
 
 ## Getting a Pending Credential Operation
 
-The `getPendingOperation` method is only used by credential curators to
+The `getPendingOperation` method is only used by credential repositories to
 complete a pending `get` or `store` credentials operation once authorization
 has been provided by the entity.
 
@@ -233,11 +238,11 @@ The call takes no arguments. It returns a *Promise* that resolves to a
    granted permission to their identity provider to write new keys to their
    decentralized identity.
 
-The credential curator can now help the entity to fulfill the credentials
-query or ask it to accept the storage request. Once the credential curator
+The credential repository can now help the entity to fulfill the credentials
+query or ask it to accept the storage request. Once the credential repository
 has completed the operation, it must call `complete` on the
 *CredentialOperation* instance, passing the result of the operation. This
-call will cause the browser to navigate away from the credential curator
+call will cause the browser to navigate away from the credential repository
 with the result.
 
 **Note: `getPendingOperation` may be changed to use [MessageChannels](https://html.spec.whatwg.org/multipage/comms.html#message-channels). **
