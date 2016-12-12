@@ -1,5 +1,11 @@
 # credentials-polyfill ChangeLog
 
+## 0.10.1 - 2016-12-12
+
+### Added
+- Add `enableRegistration` flag.
+- Allow error text to be passed through channel.
+
 ## 0.10.0 - 2016-07-21
 
 ### Added
