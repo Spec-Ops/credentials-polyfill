@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.0.0 - 2017-02-22
+
+### Changed
+- Use iframe by default and simplify dialog.
+
 ## 0.10.1 - 2016-12-12
 
 ### Added
