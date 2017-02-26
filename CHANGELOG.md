@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.0.1 - 2017-02-26
+
+### Fixed
+- Fix dialog polyfilling, opening, and canceling bugs.
+
 ## 1.0.0 - 2017-02-22
 
 ### Changed
