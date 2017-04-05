@@ -1,5 +1,11 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.0 - 2017-04-05
+
+### Added
+- Add `requestPermission` to API.
+- Use `respondWith` for polyfill events; expose IdentityCredentialRegistration.
+
 ## 1.0.1 - 2017-02-26
 
 ### Fixed
