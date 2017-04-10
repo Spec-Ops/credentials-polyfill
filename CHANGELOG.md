@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.1 - 2017-04-10
+
+### Fixed
+- Fix for legacy `register` API.
+
 ## 1.1.0 - 2017-04-05
 
 ### Added
