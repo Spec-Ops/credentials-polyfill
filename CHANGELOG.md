@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.2 - 2017-04-14
+
+### Fixed
+- Catch errors if backdrop CSS is unsupported.
+
 ## 1.1.1 - 2017-04-10
 
 ### Fixed
