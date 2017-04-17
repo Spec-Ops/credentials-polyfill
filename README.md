@@ -25,38 +25,38 @@ APIs called by credential consumers:
 * *navigator.credentials.get(* **options** *)*
 
 APIs called by credential repository (previously known as identity providers):
-* *IdentityCredential.register(* **options** *)*
+* *IdentityCredentialRegistration.register(* **options** *)*
 * *navigator.credentials.getPendingOperation(* **options** *)*
 * *CredentialOperation.complete(* **result** *)*
 
-## Registering a decentralized identity
+## Registering a new decentralized identity
 
-The *IdentityCredential.register(* **options** *)* call can be
-used to register a new decentralized identifier and link it to the entity's
-credential repository.
+The *IdentityCredentialRegistration* object can be used to register a new
+decentralized identifier and link it to the entity's credential repository.
 
-The call takes the following arguments:
+The object can be instantiated with the following options:
 
 * **options** (**required** *object*)
- * **idp** (*string*) - A URL identifier for the credential repository
+ * **repository** (*string*) - A URL identifier for the credential repository
    (previously known as identity provider) that should be associated with the
-   newly created decentralized identifier. Note that this name is likely to
-   change to **repo** in the future.
+   newly created decentralized identifier.
  * **name** (*string*) - a friendly, human-meaningful identifier, such as
-   an email address, to suggest be used, in conjunction with a password the
-   user will enter, to assist in future decentralized identifier recovery
-   should it be necessary.
+   an email address, that can be shown in UIs to help the user make identity
+   selections.
 
-The call returns a *Promise* that resolves to the document associated with
-the registered DID.
+Once instantiated, the object's *register()* method can be called. The call
+returns a *Promise* that resolves to the document associated with the
+registered DID.
 
 Example:
 
 ```javascript
-IdentityCredential.register({
-  idp: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
+var registration = new IdentityCredentialRegistration({
+  repository: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
   name: 'person@example.org'
-}).then(function(didDocument) {
+});
+
+registration.register().then(function(didDocument) {
   // ...
 });
 ```
@@ -92,6 +92,40 @@ the following:
   }
 }
 ```
+
+## Registering a new public key for an existing decentralized identity
+
+The *IdentityCredentialRegistration* object can be used to register a new
+public key on a new device/browser for an existing decentralized identifier,
+provided that credential repository has sufficient authority to update
+the entity's decentralized identifier document.
+
+The object should be instantiated using these options:
+
+* **options** (**required** *object*)
+ * **repository** (*string*) - A URL identifier for the credential repository
+   (previously known as identity provider) that should be associated with the
+   newly created decentralized identifier.
+ * **name** (*string*) - a friendly, human-meaningful identifier, such as
+   an email address, that can be shown in UIs to help the user make identity
+   selections.
+ * **id** (*string*) - the decentralized identifier to use.
+
+Once instantiated, the object's
+*addEventListener(* **event** *,* **listener** *)* method can be
+called using `registerIdentityCredential` for `event` and a function that
+will receive a `RegisterIdentityCredentialEvent` object as a parameter. Once
+an event listener has been added, a call to *register()* on the object
+should be made. Once the user has approved the registration operation, the
+event listener will be called with a `RegisterIdentityCredentialEvent`, which
+includes:
+
+* **publicKey** (*PublicKey*) - An object including `publicKeyPem`.
+* **respondWith(** **Promise** *identity* **)** - Called from an event
+  listener to respond with the registered identity information.
+
+The *register()* call returns a *Promise* that resolves to the document
+associated with the registered DID.
 
 ## Storing a Credential
 
