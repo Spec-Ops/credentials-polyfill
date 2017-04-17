@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.4 - 2017-04-17
+
+### Fixed
+- Remove window focus channel abort feature.
+
 ## 1.1.3 - 2017-04-17
 
 ### Fixed
