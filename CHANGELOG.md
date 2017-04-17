@@ -1,5 +1,12 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.3 - 2017-04-17
+
+### Fixed
+- Always attempt channel abort on context closing; MS Edge
+  cannot read `context.handle.closed` which should be
+  true when called regardless.
+
 ## 1.1.2 - 2017-04-14
 
 ### Fixed
