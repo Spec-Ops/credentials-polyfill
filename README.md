@@ -120,12 +120,74 @@ should be made. Once the user has approved the registration operation, the
 event listener will be called with a `RegisterIdentityCredentialEvent`, which
 includes:
 
-* **publicKey** (*PublicKey*) - An object including `publicKeyPem`.
+* **publicKey** (*PublicKey*) - An object including `owner` and `publicKeyPem`.
 * **respondWith(** **Promise** *identity* **)** - Called from an event
   listener to respond with the registered identity information.
 
 The *register()* call returns a *Promise* that resolves to the document
 associated with the registered DID.
+
+Example:
+
+```javascript
+var registration = new IdentityCredentialRegistration({
+  repository: 'did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1',
+  name: 'person@example.org'
+});
+
+registration.addEventListener('registerIdentityCredential', function(event) {
+  var publicKey = event.publicKey;
+
+  // async register public key with `publicKey.owner`'s' DID document;
+  // response returns public key with its new ID
+  event.respondWith($http.post('/some-register-endpoint', publicKey)
+    .then(function(response) {
+      return {
+        '@context': 'https://w3id.org/identity/v1',
+        id: publicKey.owner,
+        publicKey: response.data
+      };
+    }));
+});
+
+registration.register().then(function(didDocument) {
+  // ...
+}).catch(function(err) {
+  // ... handle error case
+})
+```
+
+The example above will result in an a JSON-LD document that looks like
+the following:
+
+```jsonld
+{
+  "@context": "https://w3id.org/identity/v1",
+  "id": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f",
+  "idp": "did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1",
+  "accessControl": {
+    "writePermission": [{
+      "id": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
+      "type": "CryptographicKey"
+    }, {
+      "id": "did:d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1",
+      "type": "Identity"
+    }]
+  },
+  "publicKey": [{
+    "id": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
+    "type": "CryptographicKey",
+    "owner": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f",
+    "publicKeyPem": "-----BEGIN PUBLIC KEY-----\r\nMIIBI...AQAB\r\n-----END PUBLIC KEY-----\r\n"
+  }],
+  "signature": {
+    "type": "LinkedDataSignature2015",
+    "created": "2015-07-02T16:54:27Z",
+    "creator": "did:59cf8ba9-70f6-456e-aa7f-6e898c3a3e5f/keys/1",
+    "signatureValue": "JukNUu...I0g=="
+  }
+}
+```
 
 ## Storing a Credential
 
