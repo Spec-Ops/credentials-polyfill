@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.5 - 2017-05-31
+
+### Changed
+- Add package.json file.
+
 ## 1.1.4 - 2017-04-17
 
 ### Fixed
