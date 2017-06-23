@@ -1,5 +1,10 @@
 # credentials-polyfill ChangeLog
 
+## 1.1.6 - 2017-06-23
+
+### Fixed
+- Fix IdentityCredential prototype.
+
 ## 1.1.5 - 2017-05-31
 
 ### Changed
